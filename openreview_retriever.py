@@ -36,6 +36,7 @@ if __name__=='__main__':
     parser.add_argument('--password', type=str, help='OpenReview password')
     parser.add_argument('--output_file', type=str, default=None, help='Output file')
     parser.add_argument('--with_abstract', action='store_true', help='Include abstract in the output file')
+    parser.add_argument('--venues', action='store_true', help='Get all venues')
     args = parser.parse_args()
 
     client = openreview.api.OpenReviewClient(
@@ -43,9 +44,11 @@ if __name__=='__main__':
         username=args.email, 
         password=args.password)
     
-    # get_all_venues(client)
-
-    if args.output_file:
-        submissions = get_all_submissions(client)
-        write_submissions_to_file(submissions, args.output_file, with_abstract=args.with_abstract)
-
+    if args.venues:
+        get_all_venues(client)
+    else:
+        if args.output_file:
+            submissions = get_all_submissions(client)
+            write_submissions_to_file(submissions, args.output_file, with_abstract=args.with_abstract)
+        else:
+            raise ValueError("Please provide an output file")
